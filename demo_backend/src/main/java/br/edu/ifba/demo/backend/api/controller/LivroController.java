@@ -3,7 +3,6 @@ package br.edu.ifba.demo.backend.api.controller;
 import java.util.List;
 import java.util.Optional;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -16,23 +15,17 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import br.edu.ifba.demo.backend.api.model.LivroModel;
-import br.edu.ifba.demo.backend.api.model.GeneroModel;
 import br.edu.ifba.demo.backend.api.repository.LivroRepository;
-import br.edu.ifba.demo.backend.api.repository.GeneroRepository;
 
 @RestController
 @RequestMapping("/livro")
 public class LivroController {
 	
-    @Autowired
-    private LivroRepository livroRepository;
-    @Autowired
-    private GeneroRepository generoRepository;
-   
-    public LivroController(LivroRepository livroRepository, GeneroRepository generoRepository) {
-        this.livroRepository = livroRepository;
-        this.generoRepository = generoRepository;
-    }
+	private LivroRepository livroRepository;
+	
+	public LivroController(LivroRepository livroRepository) {
+		this.livroRepository = livroRepository;
+	}
 
     //teste de rota
     @GetMapping
@@ -93,21 +86,11 @@ public class LivroController {
         }
     }
 
-    @PostMapping("/salvar")
+    @PostMapping("/add")
     public ResponseEntity<LivroModel> addLivro(@RequestBody LivroModel livro) {
-        if (livro.getGenero() != null && livro.getGenero().getId_genero() != null) {
-            Optional<GeneroModel> generoOpt = generoRepository.findById(livro.getGenero().getId_genero());
-            if (generoOpt.isPresent()) {
-                livro.setGenero(generoOpt.get());
-            } else {
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
-            }
-        }
-       
         LivroModel savedLivro = livroRepository.save(livro);
-        return new ResponseEntity<>(savedLivro, HttpStatus.CREATED);
-
-}
+        return new ResponseEntity<LivroModel>(savedLivro, HttpStatus.CREATED);
+    }
 
     @PutMapping("/atualizar/{id}")
     public ResponseEntity<LivroModel> atualizarLivro(@PathVariable Long id, @RequestBody LivroModel livroAtualizado) {
@@ -121,22 +104,12 @@ public class LivroController {
             livro.setAutor(livroAtualizado.getAutor());
             livro.setEditora(livroAtualizado.getEditora());
             livro.setAno_publicacao(livroAtualizado.getAno_publicacao());
+            livro.setGenero(livroAtualizado.getGenero());
             livro.setIsbn(livroAtualizado.getIsbn());
             livro.setNum_paginas(livroAtualizado.getNum_paginas());
             livro.setSinopse(livroAtualizado.getSinopse());
             livro.setIdioma(livroAtualizado.getIdioma());
             livro.setPreco(livroAtualizado.getPreco());
-
-
-            // Garantindo que o gênero exista no banco antes de atualizar
-            if (livroAtualizado.getGenero() != null && livroAtualizado.getGenero().getId_genero() != null) {
-                Optional<GeneroModel> generoOpt = generoRepository.findById(livroAtualizado.getGenero().getId_genero());
-                if (generoOpt.isPresent()) {
-                    livro.setGenero(generoOpt.get());
-                } else {
-                    return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
-                }
-            }
 
             // Salvando no banco de dados
             LivroModel livroSalvo = livroRepository.save(livro);

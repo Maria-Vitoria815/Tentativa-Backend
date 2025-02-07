@@ -34,11 +34,7 @@ public class LivroDTO {
         livro.setAutor(livroModel.getAutor());
         livro.setEditora(livroModel.getEditora());
         livro.setAno_publicacao(livroModel.getAno_publicacao());
-
-        if(livroModel.getGenero() != null){
-            livro.setGenero(livroModel.getGenero().getNome());
-        }
-
+        livro.setGenero(livroModel.getGenero());
         livro.setIsbn(livroModel.getIsbn());
         livro.setNum_paginas(livroModel.getNum_paginas());
         livro.setSinopse(livroModel.getSinopse());
