@@ -8,6 +8,8 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.Data;
 
@@ -36,10 +38,6 @@ public class LivroModel {
     private Integer ano_publicacao;
 
 
-    @Column(name = "genero", nullable = true)
-    private String genero;
-
-
     @Column(name = "isbn", nullable = true)
     private String isbn;
 
@@ -62,27 +60,30 @@ public class LivroModel {
     @Column(name = "preco", nullable = true)
     private Double preco;
 
+    @ManyToOne
+    @JoinColumn(name = "id_genero", nullable = true)
+    private GeneroModel genero;
+
 
     public LivroModel(){
         super();
     }
 
-    public LivroModel(String titulo, String autor, String editora, Integer ano_publicacao, 
-    String genero, String isbn, Integer num_paginas, String sinopse, String idioma,
-    LocalDateTime data_cadastro, double preco){
+    public LivroModel(String titulo, String autor, String editora, Integer ano_publicacao, String isbn, Integer num_paginas, String sinopse, String idioma,
+    LocalDateTime data_cadastro, double preco, GeneroModel genero){
 
         super();
         this.titulo = titulo;
         this.autor = autor;
         this.editora = editora;
         this.ano_publicacao = ano_publicacao;
-        this.genero = genero;
         this.isbn = isbn;
         this.num_paginas = num_paginas;
         this.sinopse = sinopse;
         this.idioma = idioma;
         this.data_cadastro = data_cadastro;
         this.preco = preco;
+        this.genero = genero;
 
     }
 
