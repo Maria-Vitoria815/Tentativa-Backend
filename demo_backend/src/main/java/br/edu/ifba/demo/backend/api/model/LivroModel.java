@@ -36,7 +36,7 @@ public class LivroModel {
     private Integer ano_publicacao;
 
 
-    @Column(name = "genero", nullable = true)
+    @Column(name = "id_genero", nullable = true)
     private String genero;
 
 
